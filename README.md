@@ -1,27 +1,13 @@
 # 🎮 Game Glitch Investigator: The Impossible Guesser
 
-## 🚨 The Situation
+## 📖 About This Project
 
-You asked an AI to build a simple "Number Guessing Game" using Streamlit.
-It wrote the code, ran away, and now the game is unplayable. 
-
-- You can't win.
-- The hints lie to you.
-- The secret number seems to have commitment issues.
+This project started as a broken "Number Guessing Game" built with Streamlit. An AI-generated starter codebase contained multiple critical bugs that made the game unplayable: inverted hints, broken state management, off-by-one errors, and incorrect difficulty scaling. Through systematic debugging and AI-assisted refactoring, all bugs were identified, documented, and fixed. The result is a fully functional game with proper logic separation, comprehensive test coverage, and enhanced UI features.
 
 ## 🛠️ Setup
 
 1. Install dependencies: `pip install -r requirements.txt`
-2. Run the broken app: `python -m streamlit run app.py`
-
-## 🕵️‍♂️ Your Mission
-
-1. **Play the game.** Open the "Developer Debug Info" tab in the app to see the secret number. Try to win.
-2. **Find the State Bug.** Why does the secret number change every time you click "Submit"? Ask ChatGPT: *"How do I keep a variable from resetting in Streamlit when I click a button?"*
-3. **Fix the Logic.** The hints ("Higher/Lower") are wrong. Fix them.
-4. **Refactor & Test.** - Move the logic into `logic_utils.py`.
-   - Run `pytest` in your terminal.
-   - Keep fixing until all tests pass!
+2. Run the app: `python -m streamlit run app.py`
 
 ## 📝 Document Your Experience
 

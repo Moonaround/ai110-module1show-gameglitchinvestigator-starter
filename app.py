@@ -1,5 +1,6 @@
 import random
 import streamlit as st
+import pandas as pd
 from logic_utils import get_range_for_difficulty, parse_guess, check_guess, update_score
 
 st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
@@ -43,6 +44,9 @@ if "status" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
+if "detailed_history" not in st.session_state:
+    st.session_state.detailed_history = []
+
 st.subheader("Make a guess")
 
 st.info(
@@ -72,6 +76,10 @@ with col3:
 
 if new_game:
     st.session_state.attempts = 0
+    st.session_state.score = 0
+    st.session_state.status = "playing"
+    st.session_state.history = []
+    st.session_state.detailed_history = []
     # FIX: Use selected difficulty range instead of hard-coded (1, 100)
     st.session_state.secret = random.randint(low, high)
     st.success("New game started.")
@@ -98,14 +106,27 @@ if submit:
         # FIX: Removed string conversion of secret (was breaking on even attempts)
         outcome = check_guess(guess_int, st.session_state.secret)
 
-        # Display outcome-specific message
+        # Calculate distance and hot/cold status for enhanced UI
+        distance = abs(guess_int - st.session_state.secret)
+        hot_cold = "🔥 Burning Hot!" if distance <= 5 else "🌡️ Very Close..." if distance <= 10 else "🟠 Getting warm..." if distance <= 20 else "🔵 Chilly..." if distance <= 50 else "❄️ Freezing Cold!"
+
+        # Store detailed history for summary table
+        st.session_state.detailed_history.append({
+            "Attempt": st.session_state.attempts,
+            "Guess": guess_int,
+            "Distance": distance,
+            "Status": hot_cold,
+            "Outcome": outcome
+        })
+
+        # Display color-coded outcome messages
         if show_hint:
             if outcome == "Win":
-                st.success("🎉 Correct!")
+                st.success("🎉 **CORRECT!** You found the secret number!")
             elif outcome == "Too High":
-                st.warning("📈 Go LOWER!")
+                st.warning(f"📈 **Too High!** Go LOWER. {hot_cold}")
             else:  # Too Low
-                st.warning("📉 Go HIGHER!")
+                st.warning(f"📉 **Too Low!** Go HIGHER. {hot_cold}")
 
         st.session_state.score = update_score(
             current_score=st.session_state.score,
@@ -113,20 +134,25 @@ if submit:
             attempt_number=st.session_state.attempts,
         )
 
+        # Display game history table
+        if len(st.session_state.detailed_history) > 0:
+            st.subheader("📊 Guess History")
+            history_df = pd.DataFrame(st.session_state.detailed_history)
+            st.dataframe(history_df, use_container_width=True)
+
         if outcome == "Win":
             st.balloons()
             st.session_state.status = "won"
             st.success(
-                f"You won! The secret was {st.session_state.secret}. "
-                f"Final score: {st.session_state.score}"
+                f"🎉 **You won!** The secret was **{st.session_state.secret}**\n\n"
+                f"Final score: **{st.session_state.score}** | Attempts: **{st.session_state.attempts}**"
             )
         else:
             if st.session_state.attempts >= attempt_limit:
                 st.session_state.status = "lost"
                 st.error(
-                    f"Out of attempts! "
-                    f"The secret was {st.session_state.secret}. "
-                    f"Score: {st.session_state.score}"
+                    f"💀 **Game Over!** The secret was **{st.session_state.secret}**\n\n"
+                    f"Final score: **{st.session_state.score}**"
                 )
 
 st.divider()

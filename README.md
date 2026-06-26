@@ -71,4 +71,50 @@ tests/test_game_logic.py::test_high_guess_returns_correct_outcome PASSED [100%]
 
 ## 🚀 Stretch Features
 
-- [ ] [If you choose to complete Challenge 4, describe the Enhanced UI changes here — a screenshot is optional]
+### Challenge 4: Enhanced Game UI ✅
+
+**Enhancements Implemented:**
+
+1. **Color-Coded Hints with Markdown Formatting**
+   - "Correct!" displays in green with emoji 🎉
+   - "Too High" displays in orange/warning style with emoji 📈
+   - "Too Low" displays in orange/warning style with emoji 📉
+   - All hint text uses bold formatting for emphasis
+   - Modified in `app.py` (lines 117-122)
+
+2. **Hot/Cold Emoji System Based on Distance**
+   - **🔥 Burning Hot!** — Distance ≤ 5 (extremely close)
+   - **🌡️ Very Close...** — Distance ≤ 10 (very close)
+   - **🟠 Getting warm...** — Distance ≤ 20 (getting closer)
+   - **🔵 Chilly...** — Distance ≤ 50 (far away)
+   - **❄️ Freezing Cold!** — Distance > 50 (very far)
+   - Calculated dynamically on each guess in `app.py` (line 114)
+   - Displayed inline with guess hints (lines 119-122)
+
+3. **Guess History Summary Table**
+   - Real-time table showing all guesses with:
+     - **Attempt:** Guess number
+     - **Guess:** The number the player guessed
+     - **Distance:** Absolute distance from secret number
+     - **Status:** Hot/Cold emoji indicator
+     - **Outcome:** Whether it was "Win", "Too High", or "Too Low"
+   - Displayed after each guess using Pandas DataFrame (lines 124-127)
+   - Provides players with a clear, text-based record of their game progression
+
+4. **Improved Game End Messages**
+   - Win state: Displays secret number and final score with emphasis
+   - Lose state: Clear communication with secret reveal
+   - Modified in `app.py` (lines 129-140)
+
+5. **Session Reset on New Game**
+   - All state variables properly reset: attempts, score, history, detailed_history
+   - Prevents carryover from previous games
+   - Modified in `app.py` (lines 75-81)
+
+**Dependencies Added:**
+- `pandas` — for creating and displaying the guess history DataFrame
+
+**Core Logic Unchanged:**
+- All functions in `logic_utils.py` remain untouched
+- Game logic (checking guesses, scoring) is identical
+- UI enhancements are purely presentational

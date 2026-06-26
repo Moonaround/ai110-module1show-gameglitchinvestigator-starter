@@ -6,6 +6,7 @@ def get_range_for_difficulty(difficulty: str):
         return 1, 20
     if difficulty == "Normal":
         return 1, 100
+    # FIXME: Hard difficulty (1, 50) is narrower than Normal (1, 100) — should be (1, 200) or wider
     if difficulty == "Hard":
         return 1, 50
     return 1, 100
@@ -34,6 +35,7 @@ def check_guess(guess, secret):
         return "Win", "🎉 Correct!"
 
     try:
+        # FIXME: Hint messages are backwards — "Too High" should say "Go LOWER!" not "Go HIGHER!"
         if guess > secret:
             return "Too High", "📈 Go HIGHER!"
         else:
@@ -93,6 +95,7 @@ if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
 if "attempts" not in st.session_state:
+    # FIXME: Attempts should start at 0, not 1 — causes off-by-one in scoring and display
     st.session_state.attempts = 1
 
 if "score" not in st.session_state:
@@ -133,6 +136,7 @@ with col3:
 
 if new_game:
     st.session_state.attempts = 0
+    # FIXME: "New Game" hard-codes range (1, 100) instead of respecting selected difficulty
     st.session_state.secret = random.randint(1, 100)
     st.success("New game started.")
     st.rerun()
@@ -155,6 +159,7 @@ if submit:
     else:
         st.session_state.history.append(guess_int)
 
+        # FIXME: Even attempts convert secret to string, breaking equality check and making game unwinnable
         if st.session_state.attempts % 2 == 0:
             secret = str(st.session_state.secret)
         else:

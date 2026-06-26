@@ -4,19 +4,17 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 
 ## 1. What was broken when you started?
 
-- What did the game look like the first time you ran it?
-- List at least two concrete bugs you noticed at the start  
-  (for example: "the hints were backwards").
+When I first examined the code, I found multiple critical bugs that made the game unplayable. The most impactful were: (1) the hint messages were backwards — "Too High" instructed players to "Go HIGHER!" when they should go lower, (2) even-numbered guess attempts converted the secret number to a string, breaking the equality check and making the game unwinnable on those turns, and (3) the attempts counter started at 1 instead of 0, causing off-by-one errors in scoring and attempt-limit display. A fourth bug affected difficulty selection: the "New Game" button ignored the selected difficulty and always reset the range to (1, 100). These issues combined made the game essentially non-functional.
 
 **Bug Reproduction Log**
 
-Document at least 3 bugs you found. Add rows as needed.
-
 | Input | Expected Behavior | Actual Behavior | Console Output / Error |
 |-------|-------------------|-----------------|------------------------|
-| | | | |
-| | | | |
-| | | | |
+| Guess 60 (secret 50) | "Too High" hint, "Go LOWER!" message | "Too High" hint, "Go HIGHER!" message shown | none |
+| Guess 40 (secret 50) | "Too Low" hint, "Go HIGHER!" message | "Too Low" hint, "Go LOWER!" message shown | none |
+| Attempt #2 with guess 50 (secret 50) | Score updates, game ends with "Win" | String/int comparison breaks; hint becomes unintelligible | TypeError or incorrect hint |
+| Attempt #4 with guess 75 (secret 75) | Win on even attempt | String/int mismatch prevents correct detection | TypeError or false negative |
+| Select "Hard" difficulty, start game | Secret range should be (1, 200) | Secret range is (1, 100) — same as Normal difficulty | none |
 
 ---
 
